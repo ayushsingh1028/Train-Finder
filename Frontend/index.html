@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Search - Book Your Journey</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚆 TrainFinder</h1>
+            <p>Search and book your perfect train journey</p>
+        </div>
+
+        <div class="search-card">
+            <form class="search-form" id="searchForm">
+                <div class="input-group">
+                    <label for="sourceCode">From Station</label>
+                    <input type="text" id="sourceCode" placeholder="Enter station code (e.g., NDLS)" required>
+                </div>
+                <div class="input-group">
+                    <label for="destinationCode">To Station</label>
+                    <input type="text" id="destinationCode" placeholder="Enter destination code (e.g., CST)" required>
+                </div>
+                <button type="submit" class="search-btn">Search Trains</button>
+            </form>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Searching for trains...</p>
+        </div>
+
+        <div id="results" class="results-container">
+            <div class="results-header">
+                <h2>Available Trains</h2>
+                <div class="results-count" id="resultsCount"></div>
+            </div>
+            <div id="trainsList"></div>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <h3>No trains found</h3>
+            <p>Sorry, no trains available for the selected route. Please try different station codes.</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;">
+            <h3>Something went wrong!</h3>
+            <p id="errorMessage">Unable to fetch train data. Please check your connection and try again.</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+  <div class="footer-container">
+    &copy; 2025 TrainFinder. All rights reserved.
+  </div>
+</footer>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
