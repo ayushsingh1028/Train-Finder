@@ -1,7 +1,7 @@
 // Configuration
 const API_BASE_URL = 'http://localhost:8080';
 
-// DOM Elements
+
 const searchForm = document.getElementById('searchForm');
 const sourceCodeInput = document.getElementById('sourceCode');
 const destinationCodeInput = document.getElementById('destinationCode');
@@ -13,32 +13,32 @@ const noResultsElement = document.getElementById('noResults');
 const errorElement = document.getElementById('error');
 const errorMessage = document.getElementById('errorMessage');
 
-// Prevent multiple simultaneous API calls
+
 let isSearching = false;
 
-// Event Listeners
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
 
 searchForm.addEventListener('submit', handleSearchSubmit);
 
-// Initialize the application
+
 function initializeApp() {
-    // Pre-fill with sample data for quick testing
+
     sourceCodeInput.value = '';
     destinationCodeInput.value = '';
     
-    // Add input event listeners for better UX
+
     sourceCodeInput.addEventListener('input', handleInputChange);
     destinationCodeInput.addEventListener('input', handleInputChange);
 }
 
-// Handle search form submission
+
 async function handleSearchSubmit(event) {
     event.preventDefault();
     
-    // Prevent multiple simultaneous searches
+
     if (isSearching) {
         console.log('Search already in progress...');
         return;
@@ -47,7 +47,7 @@ async function handleSearchSubmit(event) {
     const sourceCode = sourceCodeInput.value.trim().toUpperCase();
     const destinationCode = destinationCodeInput.value.trim().toUpperCase();
     
-    // Validate inputs
+
     if (!validateInputs(sourceCode, destinationCode)) {
         return;
     }
@@ -55,7 +55,7 @@ async function handleSearchSubmit(event) {
     await searchTrains(sourceCode, destinationCode);
 }
 
-// Validate user inputs
+
 function validateInputs(sourceCode, destinationCode) {
     if (!sourceCode || !destinationCode) {
         showAlert('Please enter both source and destination station codes.');
@@ -70,28 +70,27 @@ function validateInputs(sourceCode, destinationCode) {
     return true;
 }
 
-// Handle input changes (convert to uppercase)
+
 function handleInputChange(event) {
     event.target.value = event.target.value.toUpperCase();
 }
 
-// Main function to search for trains
+
 async function searchTrains(sourceCode, destinationCode) {
     try {
-        // Set searching flag
+
         isSearching = true;
         
-        // Reset UI state
+
         hideAllResults();
         showLoading();
         
-        // Make API call
+
         const trains = await fetchTrains(sourceCode, destinationCode);
         
-        // Hide loading
+
         hideLoading();
-        
-        // Remove duplicates and display results
+
         if (trains && trains.length > 0) {
             const uniqueTrains = removeDuplicateTrains(trains);
             console.log(`Original trains: ${trains.length}, After deduplication: ${uniqueTrains.length}`);
@@ -104,20 +103,20 @@ async function searchTrains(sourceCode, destinationCode) {
         hideLoading();
         showError(error);
     } finally {
-        // Reset searching flag
+
         isSearching = false;
     }
 }
 
-// Remove duplicate trains based on train number and timing
+
 function removeDuplicateTrains(trains) {
     const uniqueTrainsMap = new Map();
     
     trains.forEach(train => {
-        // Create a unique key combining multiple fields to identify duplicates
+
         const uniqueKey = `${train.train.trainNumber}-${train.departureTime}-${train.arrivalTime}-${train.source.stationCode}-${train.destination.stationCode}`;
         
-        // Only add if this unique combination hasn't been seen before
+
         if (!uniqueTrainsMap.has(uniqueKey)) {
             uniqueTrainsMap.set(uniqueKey, train);
         } else {
@@ -125,11 +124,11 @@ function removeDuplicateTrains(trains) {
         }
     });
     
-    // Convert Map values back to array
+
     return Array.from(uniqueTrainsMap.values());
 }
 
-// Alternative deduplication method - simpler approach based on train number only
+
 function removeDuplicateTrainsByNumber(trains) {
     const seenTrainNumbers = new Set();
     const uniqueTrains = [];
@@ -146,7 +145,7 @@ function removeDuplicateTrainsByNumber(trains) {
     return uniqueTrains;
 }
 
-// Fetch trains from API
+
 async function fetchTrains(sourceCode, destinationCode) {
     const url = `${API_BASE_URL}/search/by-code?sourceCode=${sourceCode}&destinationCode=${destinationCode}`;
     
@@ -159,7 +158,7 @@ async function fetchTrains(sourceCode, destinationCode) {
     return await response.json();
 }
 
-// Display the list of trains
+
 function displayTrains(trains) {
     updateResultsCount(trains.length);
     clearTrainsList();
@@ -168,7 +167,7 @@ function displayTrains(trains) {
         const trainCard = createTrainCard(train);
         trainsList.appendChild(trainCard);
         
-        // Add staggered animation
+
         setTimeout(() => {
             trainCard.classList.add('fade-in');
         }, index * 100);
@@ -177,7 +176,7 @@ function displayTrains(trains) {
     showResults();
 }
 
-// Create a train card element
+
 function createTrainCard(train) {
     const card = document.createElement('div');
     card.className = 'train-card';
@@ -216,7 +215,6 @@ function createTrainCard(train) {
     return card;
 }
 
-// Format time from 24-hour to 12-hour format
 function formatTime(time) {
     const [hours, minutes] = time.split(':');
     const hour = parseInt(hours);
@@ -225,24 +223,24 @@ function formatTime(time) {
     return `${displayHour}:${minutes} ${ampm}`;
 }
 
-// Escape HTML to prevent XSS
+
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-// Update results count display
+
 function updateResultsCount(count) {
     resultsCount.textContent = `${count} train${count !== 1 ? 's' : ''} found`;
 }
 
-// Clear the trains list
+
 function clearTrainsList() {
     trainsList.innerHTML = '';
 }
 
-// UI State Management Functions
+
 function hideAllResults() {
     resultsContainer.style.display = 'none';
     noResultsElement.style.display = 'none';
@@ -272,7 +270,7 @@ function showError(error) {
     errorElement.style.display = 'block';
     errorElement.classList.add('fade-in');
     
-    // Set appropriate error message
+
     if (error.message.includes('Failed to fetch')) {
         errorMessage.textContent = 'Unable to connect to the server. Please make sure the API is running on http://localhost:8080';
     } else {
@@ -284,7 +282,6 @@ function showAlert(message) {
     alert(message);
 }
 
-// Utility Functions
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -297,7 +294,7 @@ function debounce(func, wait) {
     };
 }
 
-// Export functions for testing (if needed)
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         formatTime,
