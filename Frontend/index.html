@@ -3,60 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Search - Book Your Journey</title>
+    <title>RailFinder - Train Search Portal</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🚆 TrainFinder</h1>
-            <p>Search and book your perfect train journey</p>
-        </div>
-
-        <div class="search-card">
-            <form class="search-form" id="searchForm">
-                <div class="input-group">
-                    <label for="sourceCode">From Station</label>
-                    <input type="text" id="sourceCode" placeholder="Enter station code (e.g., NDLS)" required>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-train"></i>
+                    <span>RailFinder</span>
                 </div>
-                <div class="input-group">
-                    <label for="destinationCode">To Station</label>
-                    <input type="text" id="destinationCode" placeholder="Enter destination code (e.g., CST)" required>
-                </div>
-                <button type="submit" class="search-btn">Search Trains</button>
-            </form>
-        </div>
-
-        <div id="loading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <p>Searching for trains...</p>
-        </div>
-
-        <div id="results" class="results-container">
-            <div class="results-header">
-                <h2>Available Trains</h2>
-                <div class="results-count" id="resultsCount"></div>
             </div>
-            <div id="trainsList"></div>
-        </div>
+            
+            <ul class="sidebar-menu">
+                <li class="menu-item active">
+                    <a href="#" data-section="search">
+                        <i class="fas fa-search"></i>
+                        <span>Train Search</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-section="pnr">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>PNR Status</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-section="live">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Live Status</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-section="schedule">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Train Schedule</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-section="stations">
+                        <i class="fas fa-building"></i>
+                        <span>Station Info</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-section="booking">
+                        <i class="fas fa-credit-card"></i>
+                        <span>My Bookings</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Guest User</span>
+                </div>
+            </div>
+        </nav>
 
-        <div id="noResults" class="no-results" style="display: none;">
-            <h3>No trains found</h3>
-            <p>Sorry, no trains available for the selected route. Please try different station codes.</p>
-        </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Train Search</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-stats">
+                        <i class="fas fa-clock"></i>
+                        <span>Real-time Data</span>
+                    </div>
+                </div>
+            </header>
 
-        <div id="error" class="error" style="display: none;">
-            <h3>Something went wrong!</h3>
-            <p id="errorMessage">Unable to fetch train data. Please check your connection and try again.</p>
-        </div>
+            <!-- Search Section -->
+            <section id="search-section" class="content-section active">
+                <div class="search-container">
+                    <div class="search-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-route"></i> Find Your Train</h2>
+                            <p>Search for trains between stations</p>
+                        </div>
+                        
+                        <form id="searchForm" class="search-form">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="sourceCode">From Station</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <input type="text" 
+                                               id="sourceCode" 
+                                               placeholder="Enter station code (e.g., NDLS)" 
+                                               required>
+                                    </div>
+                                </div>
+                                
+                                <div class="swap-button">
+                                    <button type="button" id="swapStations">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label for="destinationCode">To Station</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-flag-checkered"></i>
+                                        <input type="text" 
+                                               id="destinationCode" 
+                                               placeholder="Enter station code (e.g., BCT)" 
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="search-btn">
+                                <i class="fas fa-search"></i>
+                                <span>Search Trains</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Popular Routes -->
+                    <div class="popular-routes">
+                        <h3>Popular Routes</h3>
+                        <div class="routes-grid">
+                            <div class="route-card" data-source="NDLS" data-dest="BCT">
+                                <div class="route-info">
+                                    <span class="from">Delhi (NDLS)</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span class="to">Mumbai (BCT)</span>
+                                </div>
+                            </div>
+                            <div class="route-card" data-source="HWH" data-dest="CSMT">
+                                <div class="route-info">
+                                    <span class="from">Kolkata (HWH)</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span class="to">Mumbai (CSMT)</span>
+                                </div>
+                            </div>
+                            <div class="route-card" data-source="NDLS" data-dest="MAA">
+                                <div class="route-info">
+                                    <span class="from">Delhi (NDLS)</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span class="to">Chennai (MAA)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading" class="loading-container" style="display: none;">
+                    <div class="loading-spinner">
+                        <div class="train-loader">
+                            <i class="fas fa-train"></i>
+                        </div>
+                        <p>Searching for trains...</p>
+                    </div>
+                </div>
+
+                <!-- Results Container -->
+                <div id="results" class="results-container" style="display: none;">
+                    <div class="results-header">
+                        <h3><span id="resultsCount">0 trains found</span></h3>
+                        <div class="sort-options">
+                            <select id="sortBy">
+                                <option value="departure">Sort by Departure</option>
+                                <option value="arrival">Sort by Arrival</option>
+                                <option value="duration">Sort by Duration</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="trainsList" class="trains-list"></div>
+                </div>
+
+                <!-- No Results -->
+                <div id="noResults" class="no-results" style="display: none;">
+                    <div class="no-results-content">
+                        <i class="fas fa-search"></i>
+                        <h3>No trains found</h3>
+                        <p>Try searching with different station codes or check if the codes are correct.</p>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="error" class="error-container" style="display: none;">
+                    <div class="error-content">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Oops! Something went wrong</h3>
+                        <p id="errorMessage">Please try again later.</p>
+                        <button onclick="location.reload()" class="retry-btn">
+                            <i class="fas fa-redo"></i> Try Again
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other Sections (placeholders for sidebar menu items) -->
+            <section id="pnr-section" class="content-section">
+                <div class="feature-placeholder">
+                    <i class="fas fa-ticket-alt"></i>
+                    <h2>PNR Status</h2>
+                    <p>Check your ticket status</p>
+                    <div class="input-group">
+                        <input type="text" placeholder="Enter PNR Number" maxlength="10">
+                        <button class="search-btn">Check Status</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="live-section" class="content-section">
+                <div class="feature-placeholder">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h2>Live Train Status</h2>
+                    <p>Track live train location</p>
+                    <div class="input-group">
+                        <input type="text" placeholder="Enter Train Number">
+                        <button class="search-btn">Track Train</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="schedule-section" class="content-section">
+                <div class="feature-placeholder">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h2>Train Schedule</h2>
+                    <p>View complete train schedule</p>
+                    <div class="input-group">
+                        <input type="text" placeholder="Enter Train Number">
+                        <button class="search-btn">View Schedule</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="stations-section" class="content-section">
+                <div class="feature-placeholder">
+                    <i class="fas fa-building"></i>
+                    <h2>Station Information</h2>
+                    <p>Get station details and facilities</p>
+                    <div class="input-group">
+                        <input type="text" placeholder="Enter Station Code">
+                        <button class="search-btn">Get Info</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="booking-section" class="content-section">
+                <div class="feature-placeholder">
+                    <i class="fas fa-credit-card"></i>
+                    <h2>My Bookings</h2>
+                    <p>View and manage your bookings</p>
+                    <div class="booking-cards">
+                        <div class="booking-card">
+                            <h4>No bookings found</h4>
+                            <p>You haven't made any bookings yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
-
-    <footer class="footer">
-  <div class="footer-container">
-    &copy; 2025 TrainFinder. All rights reserved.
-  </div>
-</footer>
-
 
     <script src="script.js"></script>
 </body>
