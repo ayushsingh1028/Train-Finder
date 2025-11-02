@@ -19,12 +19,14 @@ public class TrainController {
     @GetMapping
     public List<com.ayush.Train.enitity.Train> getAllTrains()
     {
+
         return trainService.getAllTrains();
     }
 
     @PostMapping
     public com.ayush.Train.enitity.Train addTrain(@RequestBody Train train)
     {
+
         return trainService.addTrain(train);
     }
 
